@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Empilhauto - Serviços Automotivos e Empilhadeiras</title>
+    <style>
+        :root {
+            --primary-color: #e74c3c;
+            --secondary-color: #34495e;
+            --light-color: #ecf0f1;
+            --dark-color: #2c3e50;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: var(--light-color);
+            color: var(--dark-color);
+            line-height: 1.6;
+        }
+        
+        header {
+            background-color: var(--secondary-color);
+            color: white;
+            padding: 1rem;
+            text-align: center;
+        }
+        
+        .logo {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+        
+        nav {
+            background-color: var(--dark-color);
+            padding: 1rem;
+        }
+        
+        nav ul {
+            display: flex;
+            justify-content: center;
+            list-style: none;
+        }
+        
+        nav ul li {
+            margin: 0 1rem;
+        }
+        
+        nav ul li a {
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+            transition: color 0.3s;
+        }
+        
+        nav ul li a:hover {
+            color: var(--primary-color);
+        }
+        
+        .hero {
+            background-image: url('/api/placeholder/1200/600');
+            background-size: cover;
+            background-position: center;
+            height: 400px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            color: white;
+            position: relative;
+        }
+        
+        .hero::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.6);
+            z-index: 1;
+        }
+        
+        .hero-content {
+            z-index: 2;
+            padding: 0 1rem;
+        }
+        
+        .hero h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .hero p {
+            font-size: 1.2rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .btn {
+            display: inline-block;
+            background-color: var(--primary-color);
+            color: white;
+            padding: 0.8rem 1.5rem;
+            border: none;
+            border-radius: 5px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            text-decoration: none;
+            transition: background-color 0.3s;
+        }
+        
+        .btn:hover {
+            background-color: #c0392b;
+        }
+        
+        .services {
+            padding: 3rem 1rem;
+            text-align: center;
+        }
+        
+        .services h2 {
+            margin-bottom: 2rem;
+        }
+        
+        .service-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .service-card {
+            background-color: white;
+            border-radius: 5px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+            padding: 1.5rem;
+            transition: transform 0.3s;
+        }
+        
+        .service-card:hover {
+            transform: translateY(-10px);
+        }
+        
+        .service-card h3 {
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+        }
+        
+        .testimonials {
+            background-color: var(--secondary-color);
+            color: white;
+            padding: 3rem 1rem;
+            text-align: center;
+        }
+        
+        .testimonials h2 {
+            margin-bottom: 2rem;
+        }
+        
+        .testimonial-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .testimonial-card {
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 5px;
+            padding: 1.5rem;
+        }
+        
+        .testimonial-card p {
+            font-style: italic;
+            margin-bottom: 1rem;
+        }
+        
+        .testimonial-card .author {
+            font-weight: bold;
+        }
+        
+        .contact {
+            padding: 3rem 1rem;
+            text-align: center;
+        }
+        
+        .contact h2 {
+            margin-bottom: 2rem;
+        }
+        
+        .contact-info {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .contact-card {
+            background-color: white;
+            border-radius: 5px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+            padding: 1.5rem;
+            flex: 1;
+            min-width: 250px;
+        }
+        
+        .contact-card h3 {
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+        }
+        
+        footer {
+            background-color: var(--dark-color);
+            color: white;
+            text-align: center;
+            padding: 1.5rem;
+        }
+        
+        @media (max-width: 768px) {
+            nav ul {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            nav ul li {
+                margin: 0.5rem 0;
+            }
+            
+            .hero h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo">Oficina Empilhauto</div>
+        <p>Seu veículo em boas mãos</p>
+    </header>
+    
+    <nav>
+        <ul>
+            <li><a href="#">Início</a></li>
+            <li><a href="#">Serviços</a></li>
+            <li><a href="#">Sobre</a></li>
+            <li><a href="agendamento.html">Agendamento</a></li>
+            <li><a href="#">Contato</a></li>
+        </ul>
+    </nav>
+    
+    <main>
+        <section class="hero">
+            <div class="hero-content">
+                <h1>Serviços Automotivos e Empilhadeiras</h1>
+                <p>Oferecemos manutenção, revisão e venda de peças para veículos e empilhadeiras com o melhor custo-benefício da região</p>
+                <a href="agendamento.html" class="btn">Agendar Serviço</a>
+            </div>
+        </section>
+        
+        <section class="services">
+            <h2>Nossos Serviços</h2>
+            <div class="service-grid">
+                <div class="service-card">
+                    <h3>Revisão Completa</h3>
+                    <p>Verificamos todos os componentes do seu veículo para garantir segurança e desempenho.</p>
+                </div>
+                <div class="service-card">
+                    <h3>Troca de Óleo</h3>
+                    <p>Utilizamos óleos de alta qualidade e filtros originais para prolongar a vida do seu motor.</p>
+                </div>
+                <div class="service-card">
+                    <h3>Freios</h3>
+                    <p>Manutenção completa do sistema de freios com peças de primeira linha.</p>
+                </div>
+                <div class="service-card">
+                    <h3>Manutenção de Empilhadeiras</h3>
+                    <p>Especialistas em manutenção e reparos de empilhadeiras de todas as marcas e modelos.</p>
+                </div>
+                <div class="service-card">
+                    <h3>Venda de Peças</h3>
+                    <p>Trabalhamos com peças originais e alternativas de qualidade para veículos e empilhadeiras.</p>
+                </div>
+            </div>
+        </section>
+        
+        <section class="testimonials">
+            <h2>O que nossos clientes dizem</h2>
+            <div class="testimonial-grid">
+                <div class="testimonial-card">
+                    <p>"O Sr. Augusto é um profissional excelente. Atendimento de primeira e preço justo. Meu carro ficou como novo após a revisão!"</p>
+                    <span class="author">Carlos Silva</span>
+                </div>
+                <div class="testimonial-card">
+                    <p>"Fiz um orçamento em várias oficinas e na Empilhauto encontrei o melhor custo-benefício. O Augusto é muito atencioso e honesto. Recomendo!"</p>
+                    <span class="author">Maria Oliveira</span>
+                </div>
+                <div class="testimonial-card">
+                    <p>"Augusto resolveu um problema na minha empilhadeira que ninguém conseguia identificar. Profissional competente e confiável. Sempre levo meus equipamentos para manutenção na Empilhauto."</p>
+                    <span class="author">João Santos</span>
+                </div>
+            </div>
+        </section>
+        
+        <section class="contact">
+            <h2>Entre em Contato</h2>
+            <div class="contact-info">
+                <div class="contact-card">
+                    <h3>Endereço</h3>
+                    <p>Av. Principal, 1234</p>
+                    <p>Bairro Centro</p>
+                    <p>Sua Cidade - Estado</p>
+                </div>
+                <div class="contact-card">
+                    <h3>Horário de Funcionamento</h3>
+                    <p>Segunda a Sexta: 8h às 18h</p>
+                    <p>Sábado: 8h às 12h</p>
+                    <p>Domingo: Fechado</p>
+                </div>
+                <div class="contact-card">
+                    <h3>Contato</h3>
+                    <p>Telefone: (XX) XXXX-XXXX</p>
+                    <p>WhatsApp: (XX) XXXXX-XXXX</p>
+                    <p>Email: contato@empilhauto.com.br</p>
+                </div>
+            </div>
+        </section>
+    </main>
+    
+    <footer>
+        <p>&copy; 2025 Oficina Empilhauto - Todos os direitos reservados</p>
+    </footer>
+</body>
+</html>

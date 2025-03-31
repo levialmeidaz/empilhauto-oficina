@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Empilhauto - Agendamento de Serviços</title>
+    <style>
+        :root {
+            --primary-color: #e74c3c;
+            --secondary-color: #34495e;
+            --light-color: #ecf0f1;
+            --dark-color: #2c3e50;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: var(--light-color);
+            color: var(--dark-color);
+            line-height: 1.6;
+        }
+        
+        header {
+            background-color: var(--secondary-color);
+            color: white;
+            padding: 1rem;
+            text-align: center;
+        }
+        
+        .logo {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+        
+        nav {
+            background-color: var(--dark-color);
+            padding: 1rem;
+        }
+        
+        nav ul {
+            display: flex;
+            justify-content: center;
+            list-style: none;
+        }
+        
+        nav ul li {
+            margin: 0 1rem;
+        }
+        
+        nav ul li a {
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+            transition: color 0.3s;
+        }
+        
+        nav ul li a:hover {
+            color: var(--primary-color);
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+        
+        h1 {
+            text-align: center;
+            margin-bottom: 2rem;
+            color: var(--secondary-color);
+        }
+        
+        .booking-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 2rem;
+        }
+        
+        .calendar-container {
+            flex: 2;
+            min-width: 300px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 1.5rem;
+        }
+        
+        .form-container {
+            flex: 1;
+            min-width: 300px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 1.5rem;
+        }
+        
+        .calendar {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .calendar th {
+            padding: 0.5rem;
+            text-align: center;
+            background-color: var(--secondary-color);
+            color: white;
+        }
+        
+        .calendar td {
+            padding: 0.5rem;
+            text-align: center;
+            cursor: pointer;
+            border: 1px solid #ddd;
+        }
+        
+        .calendar td:hover {
+            background-color: #f8f9fa;
+        }
+        
+        .calendar .selected {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        
+        .calendar .unavailable {
+            background-color: #ddd;
+            color: #999;
+            cursor: not-allowed;
+        }
+        
+        .month-navigation {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+        }
+        
+        .month-navigation button {
+            background-color: var(--secondary-color);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        
+        .time-slots {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            gap: 0.5rem;
+            margin-top: 1.5rem;
+        }
+        
+        .time-slot {
+            text-align: center;
+            padding: 0.5rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        
+        .time-slot:hover {
+            background-color: #f8f9fa;
+        }
+        
+        .time-slot.selected {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        
+        .time-slot.unavailable {
+            background-color: #ddd;
+            color: #999;
+            cursor: not-allowed;
+        }
+        
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+        
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+        
+        label {
+            font-weight: bold;
+        }
+        
+        input, select, textarea {
+            padding: 0.8rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+        
+        textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+        
+        .btn {
+            display: inline-block;
+            background-color: var(--primary-color);
+            color: white;
+            padding: 0.8rem 1.5rem;
+            border: none;
+            border-radius: 5px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            text-decoration: none;
+            transition: background-color 0.3s;
+        }
+        
+        .btn:hover {
+            background-color: #c0392b;
+        }
+        
+        .btn-secondary {
+            background-color: var(--secondary-color);
+        }
+        
+        .btn-secondary:hover {
+            background-color: #2c3e50;
+        }
+        
+        .confirmation {
+            background-color: #4CAF50;
+            color: white;
+            text-align: center;
+            padding: 1rem;
+            border-radius: 4px;
+            margin-bottom: 1rem;
+            display: none;
+        }
+        
+        .error {
+            background-color: #f44336;
+            color: white;
+            text-align: center;
+            padding: 1rem;
+            border-radius: 4px;
+            margin-bottom: 1rem;
+            display: none;
+        }
+        
+        .service-type-container {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+        
+        .service-type {
+            flex: 1;
+            text-align: center;
+            padding: 1rem;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .service-type:hover {
+            background-color: #f8f9fa;
+        }
+        
+        .service-type.selected {
+            border-color: var(--primary-color);
+            background-color: rgba(231, 76, 60, 0.1);
+        }
+        
+        .service-type i {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+            color: var(--secondary-color);
+        }
+        
+        footer {
+            background-color: var(--dark-color);
+            color: white;
+            text-align: center;
+            padding: 1.5rem;
+            margin-top: 2rem;
+        }
+        
+        @media (max-width: 768px) {
+            .booking-container {
+                flex-direction: column;
+            }
+            
+            nav ul {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            nav ul li {
+                margin: 0.5rem 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo">Oficina Empilhauto</div>
+        <p>Seu veículo em boas mãos</p>
+    </header>
+    
+    <nav>
+        <ul>
+            <li><a href="index.html">Início</a></li>
+            <li><a href="#">Serviços</a></li>
+            <li><a href="#">Sobre</a></li>
+            <li><a href="agendamento.html">Agendamento</a></li>
+            <li><a href="#">Contato</a></li>
+        </ul>
+    </nav>
+    
+    <div class="container">
+        <h1>Agendamento de Serviços</h1>
+        
+        <div class="confirmation" id="confirmation">
+            Agendamento realizado com sucesso! Uma confirmação foi enviada para o seu WhatsApp.
+        </div>
+        
+        <div class="error" id="error">
+            Ocorreu um erro ao realizar o agendamento. Por favor, tente novamente.
+        </div>
+        
+        <div class="service-type-container">
+            <div class="service-type" id="service-maintenance" onclick="selectServiceType('maintenance')">
+                <i>🔧</i>
+                <h3>Manutenção</h3>
+                <p>Revisão, troca de óleo, freios e mais</p>
+            </div>
+            <div class="service-type" id="service-forklift" onclick="selectServiceType('forklift')">
+                <i>🏗️</i>
+                <h3>Empilhadeiras</h3>
+                <p>Manutenção e reparos em empilhadeiras</p>
+            </div>
+            <div class="service-type" id="service-parts" onclick="selectServiceType('parts')">
+                <i>🔩</i>
+                <h3>Peças</h3>
+                <p>Compra e instalação de peças</p>
+            </div>
+        </div>
+        
+        <div class="booking-container">
+            <div class="calendar-container">
+                <div class="month-navigation">
+                    <button onclick="prevMonth()">&lt; Anterior</button>
+                    <h2 id="month-year">Março 2025</h2>
+                    <button onclick="nextMonth()">Próximo &gt;</button>
+                </div>
+                
+                <table class="calendar" id="calendar">
+                    <thead>
+                        <tr>
+                            <th>Dom</th>
+                            <th>Seg</th>
+                            <th>Ter</th>
+                            <th>Qua</th>
+                            <th>Qui</th>
+                            <th>Sex</th>
+                            <th>Sáb</th>
+                        </tr>
+                    </thead>
+                    <tbody id="calendar-body">
+                        <!-- Calendar will be generated by JavaScript -->
+                    </tbody>
+                </table>
+                
+                <h3 style="margin-top: 1.5rem;">Horários Disponíveis</h3>
+                <div class="time-slots" id="time-slots">
+                    <!-- Time slots will be generated by JavaScript -->
+                </div>
+            </div>
+            
+            <div class="form-container">
+                <form id="booking-form">
+                    <div class="form-group">
+                        <label for="name">Nome Completo</label>
+                        <input type="text" id="name" name="name" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="phone">WhatsApp (com DDD)</label>
+                        <input type="tel" id="phone" name="phone" placeholder="(XX) XXXXX-XXXX" required>
+                    </div>
+                    
+                    <div class="form-group vehicle-field">
+                        <label for="car-model">Modelo do Veículo</label>
+                        <input type="text" id="car-model" name="car-model" placeholder="Ex: Fiat Uno 2018" required>
+                    </div>
+                    
+                    <div class="form-group forklift-field" style="display: none;">
+                        <label for="forklift-model">Modelo da Empilhadeira</label>
+                        <input type="text" id="forklift-model" name="forklift-model" placeholder="Ex: Toyota 8FGU25">
+                    </div>
+                    
+                    <div class="form-group vehicle-field">
+                        <label for="license-plate">Placa</label>
+                        <input type="text" id="license-plate" name="license-plate" placeholder="ABC-1234" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="service-select">Serviço</label>
+                        <select id="service-select" name="service">
+                            <option value="">Selecione um serviço</option>
+                            <option value="revisao">Revisão Completa</option>
+                            <option value="oleo">Troca de Óleo</option>
+                            <option value="freios">Manutenção de Freios</option>
+                            <option value="suspensao">Suspensão</option>
+                            <option value="eletrica">Sistema Elétrico</option>
+                            <option value="motor">Reparos no Motor</option>
+                            <option value="peca">Compra/Instalação de Peças</option>
+                            <option value="outro">Outro (especifique)</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="notes">Detalhes/Observações</label>
+                        <textarea id="notes" name="notes" placeholder="Descreva o problema ou serviço desejado..."></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Data e Hora Selecionadas</label>
+                        <p id="selected-date-time">Nenhuma data/hora selecionada</p>
+                        <input type="hidden" id="selected-date" name="selected-date">
+                        <input type="hidden" id="selected-time" name="selected-time">
+                        <input type="hidden" id="service-type" name="service-type" value="maintenance">
+                    </div>
+                    
+                    <button type="submit" class="btn">Confirmar Agendamento</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <footer>
+        <p>&copy; 2025 Oficina Empilhauto - Todos os direitos reservados</p>
+    </footer>
+    
+    <script>
+        // Global variables
+        let currentDate = new Date();
+        let selectedDate = null;
+        let selectedTime = null;
+        let serviceType = 'maintenance';
+        
+        // Simulated unavailable dates (in a real implementation, this would come from a server/Google Calendar API)
+        const unavailableDates = [
+            new Date(2025, 2, 15), // March 15, 2025
+            new Date(2025, 2, 16), // March 16, 2025
+            new Date(2025, 2, 22), // March 22, 2025
+            new Date(2025, 2, 23)  // March 23, 2025
+        ];
+        
+        // Simulated unavailable time slots (in a real implementation, this would come from a server/Google Calendar API)
+        const unavailableTimeSlots = {
+            '2025-04-01': ['09:00', '10:00', '11:00'],
+            '2025-04-02': ['14:00', '15:00'],
+            '2025-04-03': ['16:00', '17:00']
+        };
+        
+        // Available time slots
+        const availableTimeSlots = [
+            '08:00', '09:00', '10:00', '11:00', 
+            '13:00', '14:00', '15:00', '16:00', '17:00'
+        ];
+        
+        // Initialize the page
+        document.addEventListener('DOMContentLoaded', function() {
+            generateCalendar();
+            document.getElementById('booking-form').addEventListener('submit', handleFormSubmit);
+            selectServiceType('maintenance'); // Default to maintenance
+        });
+        
+        // Function to select service type
+        function selectServiceType(type) {
+            serviceType = type;
+            document.getElementById('service-type').value = type;
+            
+            // Update UI
+            document.querySelectorAll('.service-type').forEach(el => {
+                el.classList.remove('selected');
+            });
+            document.getElementById('service-' + type).classList.add('selected');
+            
+            // Toggle fields based on type
+            if (type === 'forklift') {
+                document.querySelectorAll('.vehicle-field').forEach(el => {
+                    el.style.display = 'none';
+                });
+                document.querySelectorAll('.forklift-field').forEach(el => {
+                    el.style.display = 'flex';
+                });
+                document.getElementById('forklift-model').required = true;
+                document.getElementById('car-model').required = false;
+                document.getElementById('license-plate').required = false;
+            } else {
+                document.querySelectorAll('.vehicle-field').forEach(el => {
+                    el.style.display = 'flex';
+                });
+                document.querySelectorAll('.forklift-field').forEach(el => {
+                    el.style.display = 'none';
+                });
+                document.getElementById('forklift-model').required = false;
+                document.getElementById('car-model').required = true;
+                document.getElementById('license-plate').required = true;
+            }
+            
+            // Update service dropdown based on type
+            const serviceSelect = document.getElementById('service-select');
+            serviceSelect.innerHTML = '';
+            
+            if (type === 'maintenance') {
+                const options = [
+                    {value: '', text: 'Selecione um serviço'},
+                    {value: 'revisao', text: 'Revisão Completa'},
+                    {value: 'oleo', text: 'Troca de Óleo'},
+                    {value: 'freios', text: 'Manutenção de Freios'},
+                    {value: 'suspensao', text: 'Suspensão'},
+                    {value: 'eletrica', text: 'Sistema
